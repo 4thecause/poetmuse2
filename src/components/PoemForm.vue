@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { getSyllableCount } from '../services/datamuseService';
-import RhymeSuggestions from './RhymeSuggestions.vue';
-import SavePoemButton from './SavePoemButton.vue';
+import { ref, computed } from "vue";
+import { getSyllableCount } from "../services/datamuseService";
+/* import { RhymeSuggestions } from './RhymeSuggestions.vue';
+import SavePoemButton from './SavePoemButton.vue'; */
 
-const emit = defineEmits<{
+/* const emit = defineEmits<{
   (e: 'saved'): void;
   (e: 'error', message: string): void;
-}>();
+}>(); */
 
-const title = ref('');
-const poem = ref('');
+const title = ref("");
+const poem = ref("");
 const loading = ref(false);
-const selectedLine = ref('');
+const selectedLine = ref("");
 const currentLineIndex = ref(-1);
 
-const lines = computed(() => poem.value.split('\n'));
+const lines = computed(() => poem.value.split("\n"));
 const syllableCount = ref<number[]>([]);
 
 async function updateSyllableCounts() {
@@ -29,12 +29,15 @@ async function updateSyllableCounts() {
         const syllables = await Promise.all(
           words.map((word) => getSyllableCount(word))
         );
-        return syllables.reduce((sum, count) => sum + count, 0);
+        return syllables.reduce(
+          (sum: number, count) => sum + (count as number),
+          0
+        );
       })
     );
     syllableCount.value = counts;
   } catch (error) {
-    console.error('Error updating syllable counts:', error);
+    console.error("Error updating syllable counts:", error);
   } finally {
     loading.value = false;
   }
@@ -59,9 +62,13 @@ function replaceLastWord(line: string, newWord: string): string {
   if (!match) return line;
 
   const lastWord = match[0];
-  const punctuation = lastWord.match(/[.,!?;:"'""''`\(\)\[\]{}]*$/)?.[0] || '';
+  const punctuation = lastWord.match(/[.,!?;:"'""''`\(\)\[\]{}]*$/)?.[0] || "";
   return line.slice(0, -lastWord.length) + newWord + punctuation;
 }
+
+/* function defineEmits<T>() {
+  throw new Error("Function not implemented.");
+} */
 </script>
 
 <template>
@@ -81,7 +88,7 @@ function replaceLastWord(line: string, newWord: string): string {
           :title="title"
           :content="poem"
           @saved="$emit('saved')"
-          @error="(msg) => $emit('error', msg)"
+          @error="(msg: any) => $emit('error', msg)"
         />
       </div>
     </v-card-title>
@@ -117,7 +124,7 @@ function replaceLastWord(line: string, newWord: string): string {
           v-model="poem"
           @update:model-value="handlePoemUpdate"
           label="Write your poem here..."
-          auto-grow      
+          auto-grow
           hide-details
           class="poem-input"
           :class="{ 'with-counts': poem }"
@@ -128,7 +135,7 @@ function replaceLastWord(line: string, newWord: string): string {
         v-if="selectedLine"
         :line="selectedLine"
         @word-selected="
-          (word) => {
+          (word: any) => {
             const newLines = [...lines];
             newLines[currentLineIndex] = replaceLastWord(selectedLine, word);
             poem = newLines.join('\n');
@@ -171,7 +178,7 @@ function replaceLastWord(line: string, newWord: string): string {
 }
 
 .poem-input :deep(textarea) {
-  font-family: 'Georgia', serif;
+  font-family: "Georgia", serif;
   font-size: 1rem !important;
   line-height: 2.5rem !important;
   padding: 0 0.5rem !important;
