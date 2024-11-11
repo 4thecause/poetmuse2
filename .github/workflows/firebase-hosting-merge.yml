@@ -15,6 +15,7 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_POETMUSE_7E4CD }}
+          firebaseServiceAccount:
+            ${{ secrets.FIREBASE_SERVICE_ACCOUNT_POETMUSE_7E4CD }}
           channelId: live
           projectId: poetmuse-7e4cd
