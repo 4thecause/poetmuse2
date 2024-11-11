@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { useAuthStore } from '../stores/auth';
-import PoemEditor from '../components/PoemEditor.vue';
-
-const authStore = useAuthStore();
+import PoemEditor from "../components/PoemEditor.vue";
 </script>
 
 <template>
